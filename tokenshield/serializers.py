@@ -2,6 +2,27 @@ from .models import User
 from rest_framework import serializers
 
 
+class UserLoginSerializer(serializers.Serializer):
+  email = serializers.EmailField()
+  password = serializers.CharField(write_only=True)
+
+  def validate(self, data):
+    email = data.get('email')
+    password = data.get('password')
+
+    if not email or not password:
+      raise serializers.ValidationError({'detail': 'Email and password are required'})
+
+    try:
+      user = User.objects.get(email=email)
+    except User.DoesNotExist:
+      raise serializers.ValidationError({'email': 'Email not found'})
+
+    if not user.check_password(password):
+      raise serializers.ValidationError({'password': 'Incorrect password'})
+
+    return {'user': user}
+
 class UserRegisterSerializer(serializers.ModelSerializer):
   repeat_password = serializers.CharField(write_only=True)
 
