@@ -16,10 +16,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from django.http import HttpResponse
+from django.http import JsonResponse
 
 urlpatterns = [
-    path('', lambda request: HttpResponse("Hello, World!")),
+    path('', lambda request: JsonResponse({'bro': 'wrong number buddy ;)'})),
     path('admin/', admin.site.urls),
-    path('api/', include('tokenshield.urls'))
+    path('api/', include('tokenshield.urls')),
+    path('api/', include('practice.urls')),
+    path('api/', include('product.urls')),
+    path('api/', include('store.urls')),
 ]
